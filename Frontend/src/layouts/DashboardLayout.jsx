@@ -99,10 +99,14 @@ export default function DashboardLayout() {
 
             <ListItemText
               primary={item.title}
-              primaryTypographyProps={{
-                fontSize: 14,
-                fontWeight: 600,
-              }}
+              slotProps={{
+  primary: {
+    sx: {
+      fontSize: 14,
+      fontWeight: 600,
+    },
+  },
+}}
             />
           </ListItemButton>
         ))}
@@ -111,7 +115,13 @@ export default function DashboardLayout() {
   );
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  }}
+>
       <AppBar
         position="fixed"
         color="inherit"
@@ -123,7 +133,13 @@ export default function DashboardLayout() {
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+  }}
+>
             {!isDesktop && (
               <IconButton onClick={() => setMobileOpen(true)}>
                 <MenuIcon />
@@ -135,8 +151,19 @@ export default function DashboardLayout() {
             </Typography>
           </Box>
 
-          <Box display="flex" alignItems="center" gap={2}>
-            <Box textAlign="right" sx={{ display: { xs: "none", sm: "block" } }}>
+          <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    gap: 2,
+  }}
+>
+            <Box
+  sx={{
+    textAlign: "right",
+    display: { xs: "none", sm: "block" },
+  }}
+>
               <Typography fontSize={13} fontWeight={700}>
                 Admin User
               </Typography>

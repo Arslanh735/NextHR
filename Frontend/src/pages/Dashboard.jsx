@@ -109,10 +109,12 @@ export default function Dashboard() {
           <Card key={stat.title}>
             <CardContent>
               <Stack
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-              >
+  sx={{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
                 <Typography color="text.secondary" fontSize={13}>
                   {stat.title}
                 </Typography>
@@ -254,7 +256,13 @@ export default function Dashboard() {
                 {employees.map((employee) => (
                   <TableRow key={employee.name}>
                     <TableCell>
-                      <Stack direction="row" alignItems="center" gap={1.5}>
+                      <Stack
+  sx={{
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 1.5,
+  }}
+>
                         <Avatar sx={{ bgcolor: "primary.light", color: "primary.dark" }}>
                           {employee.avatar}
                         </Avatar>

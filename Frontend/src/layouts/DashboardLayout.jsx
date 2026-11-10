@@ -1,9 +1,13 @@
+
 import { useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   AppBar,
   Avatar,
   Box,
+  Button,
   Drawer,
   IconButton,
   List,
@@ -25,10 +29,13 @@ import {
   Apartment as DepartmentIcon,
   Assessment as ReportsIcon,
   Settings as SettingsIcon,
+  Logout,
 } from "@mui/icons-material";
 
 import { useTheme } from "@mui/material/styles";
-import { NavLink, Outlet } from "react-router-dom";
+
+import { useLogoutMutation } from "../services/authApi";
+import { clearCredentials } from "../features/auth/authSlice";
 
 const drawerWidth = 250;
 
@@ -48,6 +55,24 @@ export default function DashboardLayout() {
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      dispatch(clearCredentials());
+      navigate("/login", { replace: true });
+    }
+  };
 
   const sidebar = (
     <Box sx={{ height: "100%", bgcolor: "#fff" }}>
@@ -100,13 +125,13 @@ export default function DashboardLayout() {
             <ListItemText
               primary={item.title}
               slotProps={{
-  primary: {
-    sx: {
-      fontSize: 14,
-      fontWeight: 600,
-    },
-  },
-}}
+                primary: {
+                  sx: {
+                    fontSize: 14,
+                    fontWeight: 600,
+                  },
+                },
+              }}
             />
           </ListItemButton>
         ))}
@@ -115,13 +140,7 @@ export default function DashboardLayout() {
   );
 
   return (
-    <Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  }}
->
+    <Box sx={{ display: "flex" }}>
       <AppBar
         position="fixed"
         color="inherit"
@@ -134,12 +153,12 @@ export default function DashboardLayout() {
       >
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    gap: 2,
-  }}
->
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
             {!isDesktop && (
               <IconButton onClick={() => setMobileOpen(true)}>
                 <MenuIcon />
@@ -152,28 +171,41 @@ export default function DashboardLayout() {
           </Box>
 
           <Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    gap: 2,
-  }}
->
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
             <Box
-  sx={{
-    textAlign: "right",
-    display: { xs: "none", sm: "block" },
-  }}
->
+              sx={{
+                textAlign: "right",
+                display: { xs: "none", sm: "block" },
+              }}
+            >
               <Typography fontSize={13} fontWeight={700}>
-                Admin User
+                {user?.fullName || "User"}
               </Typography>
 
               <Typography fontSize={11} color="text.secondary">
-                Super Administrator
+                {user?.role?.toUpperCase() || "USER"}
               </Typography>
             </Box>
 
-            <Avatar sx={{ bgcolor: "primary.main" }}>A</Avatar>
+            <Avatar sx={{ bgcolor: "primary.main" }}>
+              {user?.fullName?.charAt(0).toUpperCase() || "U"}
+            </Avatar>
+
+            <Button
+              color="error"
+              variant="outlined"
+              size="small"
+              startIcon={<Logout />}
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

@@ -1,3 +1,4 @@
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
@@ -5,14 +6,11 @@ export const api = createApi({
 
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
+
+    credentials: "include",
   }),
 
-  tagTypes: [
-    "Employees",
-    "Attendance",
-    "Leaves",
-    "Payroll",
-  ],
+  tagTypes: ["Auth", "Employees", "Attendance", "Leaves", "Payroll"],
 
   endpoints: () => ({}),
 });

@@ -3,8 +3,10 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import cookieParser from "cookie-parser";
 
 import healthRoutes from "./routes/healthRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import {
   notFound,
@@ -13,10 +15,8 @@ import {
 
 const app = express();
 
-// Security
 app.use(helmet());
 
-// CORS
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
@@ -24,16 +24,15 @@ app.use(
   })
 );
 
-// Request parsing
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Development logging
+app.use(cookieParser());
+
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Rate limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 100,
@@ -43,10 +42,9 @@ const apiLimiter = rateLimit({
 
 app.use("/api", apiLimiter);
 
-// Routes
 app.use("/api/health", healthRoutes);
+app.use("/api/auth", authRoutes);
 
-// Error handling
 app.use(notFound);
 app.use(errorHandler);
 

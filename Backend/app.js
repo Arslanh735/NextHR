@@ -45,7 +45,7 @@ app.use("/api", apiLimiter);
 
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/employees", employeeRoutes);
+app.use("/api/employee", employeeRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
